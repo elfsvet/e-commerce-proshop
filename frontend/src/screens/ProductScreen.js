@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Row, Col, Image, ListGroup, Card, Button, ListGroupItem } from 'react-bootstrap'
 import Rating from '../components/Rating'
-import products from '../products'
+import axios from 'axios'
 
 const ProductScreen = () => {
-    const navigate = useNavigate()
-    const params = useParams()
-    const product = products.find(p => p._id === params.id)
+    const [product, setProduct] = useState({})
+    // we use params instead of match
+    const params = useParams();
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            const { data } = await axios.get(`/api/products/${params.id}`)
+
+            setProduct(data)
+        }
+        fetchProduct()
+    }, [])
 
     return (
         <>
@@ -31,7 +40,7 @@ const ProductScreen = () => {
                             Price: ${product.price}
                         </ListGroupItem>
                         <ListGroupItem>
-                            Description: ${product.description}
+                            Description: {product.description}
                         </ListGroupItem>
                     </ListGroup>
                 </Col>
