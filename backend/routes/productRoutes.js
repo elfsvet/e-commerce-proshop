@@ -1,31 +1,13 @@
 import express from 'express';
 const router = express.Router();
-import Product from '../models/productModel.js'
-// to not write the error logic with try/catch use this
-import asyncHandler from 'express-async-handler'
-// @desc    Fetch all products
-// @route   GET /api/products
-// @access  Public
-router.get('/', asyncHandler(async (req, res) => {
-    const products = await Product.find({})
-// if we want to create a harcoded error we can do it here with line below
-// throw new Error('Some error')
-    res.json(products);
-}))
+import { getProductById, getProducts } from '../controllers/productController.js'
+// we cleaned up it to controllers productController.js
 
+//we can do this router.get('/',getProducts) but I would love to try this:
+router.route('/').get(getProducts)
 
-// @desc    Fetch single products
-// @route   GET /api/products/:id
-// @access  Public
-router.get('/:id', asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params.id)
+// we also try a different route router.get('/:id', getProductById)
+router.route('/:id').get(getProductById)
 
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404)
-        throw new Error('Product not found')
-    }
-}))
 
 export default router
