@@ -40,7 +40,7 @@ const CartScreen = () => {
 
   const checkoutHandler = () => {
     navigate(`/login?redirect=shipping`)
-    console.log('checkout')
+    // console.log('checkout')
   }
   return (
     <Row>
