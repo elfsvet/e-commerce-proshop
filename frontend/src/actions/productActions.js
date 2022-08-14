@@ -4,7 +4,7 @@ import {
     PRODUCT_LIST_FAIL
 } from '../constants/productConstants'
 import axios from 'axios'
-
+// list products action
 export const listProducts = () => async (dispatch) => {
     try {
         // means go to product reducers and get the loading to true and product []
