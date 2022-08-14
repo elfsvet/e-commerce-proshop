@@ -23,7 +23,7 @@ const ProductScreen = () => {
 
     const addToCartHandler = () => {
         // we don't have to use history as a match anymore we will use navigate instead. With navigate hook useNavigate
-       navigate(`/cart/${params.id}?qty=${qty}`)
+        navigate(`/cart/${params.id}?qty=${qty}`)
     }
 
     return (
@@ -47,7 +47,8 @@ const ProductScreen = () => {
                             </ListGroupItem>
                             <ListGroupItem>
                                 <Rating
-                                    value={product.rating}
+                                    // to fix value on load, I added the ternary statement
+                                    value={product.rating === undefined ? 0 : product.rating}
                                     text={`${product.numReviews} reviews`}
                                 />
                             </ListGroupItem>
