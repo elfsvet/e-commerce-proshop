@@ -8,7 +8,8 @@ import asyncHandler from 'express-async-handler'
 // @access  Public
 router.get('/', asyncHandler(async (req, res) => {
     const products = await Product.find({})
-
+// if we want to create a harcoded error we can do it here with line below
+// throw new Error('Some error')
     res.json(products);
 }))
 

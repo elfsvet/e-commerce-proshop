@@ -1,7 +1,10 @@
 import {
     PRODUCT_LIST_REQUEST,
     PRODUCT_LIST_SUCCESS,
-    PRODUCT_LIST_FAIL
+    PRODUCT_LIST_FAIL,
+    PRODUCT_DETAILS_REQUEST,
+    PRODUCT_DETAILS_SUCCESS,
+    PRODUCT_DETAILS_FAIL
 } from '../constants/productConstants'
 // product list reducers
 export const productListReducer = (state = { products: [] }, action) => {
@@ -14,6 +17,25 @@ export const productListReducer = (state = { products: [] }, action) => {
             return { loading: false, products: action.payload }
         // on error stop loading and send the error from action
         case PRODUCT_LIST_FAIL:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+}
+
+export const productDetailsReducer = (
+    state = { product: {reviews: []} },
+    action
+    ) => {
+    switch (action.type) {
+        case PRODUCT_DETAILS_REQUEST:
+            // on request start loading while no data is retrieved.
+            return { loading: true, ...state }
+        // on success stop the loading and send the data from action.
+        case PRODUCT_DETAILS_SUCCESS:
+            return { loading: false, product: action.payload }
+        // on error stop loading and send the error from action
+        case PRODUCT_DETAILS_FAIL:
             return { loading: false, error: action.payload }
         default:
             return state
