@@ -20,13 +20,15 @@ const CartScreen = () => {
   const navigate = useNavigate()
   const params = useParams()
   const productId = params.id
-  console.log(productId)
   // no more location history or match. for location use hook useLocation
   const location = useLocation()
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
   const dispatch = useDispatch()
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = userLogin
 
   useEffect(() => {
     if (productId) {
@@ -39,9 +41,14 @@ const CartScreen = () => {
   }
 
   const checkoutHandler = () => {
-    navigate(`/login?redirect=shipping`)
+    if (userInfo) {
+      navigate('/shipping')
+    } else {
+      navigate('/login')
+    }
     // console.log('checkout')
   }
+
   return (
     <Row>
       <Col md={8}>
@@ -116,7 +123,7 @@ const CartScreen = () => {
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
               >
-                Procced To Checkout
+                Proceed To Checkout
               </Button>
             </ListGroupItem>
           </ListGroup>
