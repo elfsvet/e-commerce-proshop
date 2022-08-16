@@ -15,9 +15,6 @@ import {
 } from '../constants/userConstants'
 import axios from 'axios'
 
-
-
-
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -54,13 +51,11 @@ export const login = (email, password) => async (dispatch) => {
   }
 }
 
-
 //?  should it be async?
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo')
   dispatch({ type: USER_LOGOUT })
 }
-
 
 export const register = (name, email, password) => async (dispatch) => {
   try {
@@ -86,13 +81,13 @@ export const register = (name, email, password) => async (dispatch) => {
       // ... and passing it as payload
       payload: data,
     })
-// after we registered we should be logged in
+    // after we registered we should be logged in
     dispatch({
       type: USER_LOGIN_SUCCESS,
       // ... and passing it as payload
       payload: data,
     })
-    
+
     // ...setting this data to local storage
     localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (error) {
@@ -106,37 +101,31 @@ export const register = (name, email, password) => async (dispatch) => {
   }
 }
 
-
-
 // to set the token we would need to set getState next to dispatch in async arguments
 export const getUserDetails = (id) => async (dispatch, getState) => {
   try {
-
-
     dispatch({
       type: USER_DETAILS_REQUEST,
     })
 
-    const { userLogin: {userInfo}} = getState()
+    const {
+      userLogin: { userInfo },
+    } = getState()
     // when we actually send data we want to send in the headers the content type of application / json.
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`
+        Authorization: `Bearer ${userInfo.token}`,
       },
     }
     // getting the user data as id name email token....
-    const { data } = await axios.get(
-      `/api/users/${id}`,
-      config
-    )
+    const { data } = await axios.get(`/api/users/${id}`, config)
 
     dispatch({
       type: USER_DETAILS_SUCCESS,
       // ... and passing it as payload
       payload: data,
     })
-
   } catch (error) {
     dispatch({
       type: USER_DETAILS_FAIL,
@@ -148,52 +137,50 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   }
 }
 
-
-export const updateUserProfileDetails = (user) => async (dispatch, getState) => {
+export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
-
-
     dispatch({
       type: USER_UPDATE_PROFILE_REQUEST,
     })
 
-    const { userLogin: {userInfo}} = getState()
+    const {
+      userLogin: { userInfo },
+    } = getState()
     // when we actually send data we want to send in the headers the content type of application / json.
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`
+        Authorization: `Bearer ${userInfo.token}`,
       },
     }
     // getting the user data as id name email token....
-    const { data } = await axios.put(
-      `/api/users/profile`,
-      user,
-      config
-    )
+    const { data } = await axios.put(`/api/users/profile`, user, config)
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       // ... and passing it as payload
       payload: data,
     })
-    
+
     dispatch({
       type: USER_LOGIN_SUCCESS,
       // ... and passing it as payload
       payload: data,
     })
 
-    localStorage.setItem('userInfo',JSON.stringify(data))
-
-
+    localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout())
+    }
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     })
   }
 }

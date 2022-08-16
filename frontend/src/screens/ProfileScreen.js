@@ -4,7 +4,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { getUserDetails, updateUserProfileDetails } from '../actions/userActions'
+import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import {USER_UPDATE_PROFILE_RESET, USER_UPDATE_PROFILE_SUCCESS} from '../constants/userConstants'
 
 const ProfileScreen = () => {
@@ -52,7 +52,7 @@ const ProfileScreen = () => {
       setMessage('Passwords do not match')
     } else {
       // DISPATCH UPDATE PROFILE
-      dispatch(updateUserProfileDetails({ id: user._id, name, email, password }))
+      dispatch(updateUserProfile({ id: user._id, name, email, password }))
     }
   }
 

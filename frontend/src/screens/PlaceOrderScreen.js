@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Button,
@@ -12,25 +12,55 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { createOrder } from '../actions/orderActions'
 
 const PlaceOrderScreen = () => {
-    const addDecimals = (num) => {
-        return (Math.round(num * 100)/100).toFixed(2)
-    }
-
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const addDecimals = (num) => {
+    return (Math.round(num * 100) / 100).toFixed(2)
+  }
   const cart = useSelector((state) => state.cart)
 
-  
   //   calculate prices
-  cart.itemsPrice = addDecimals(cart.cartItems.reduce((acc, item) => acc + item.price* item.qty, 0))
-  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0: 100)
-  
-  cart.taxPrice = addDecimals(Number((0.07 * cart.itemsPrice).toFixed(2)))
-  cart.totalPrice = Number(cart.itemsPrice)+Number(cart.shippingPrice)+Number(cart.taxPrice)
+  cart.itemsPrice = addDecimals(
+    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  )
+  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100)
 
-const placeOrderHandler = () => {
-    console.log('Order')
-}
+  cart.taxPrice = addDecimals(Number((0.07 * cart.itemsPrice).toFixed(2)))
+  cart.totalPrice = (
+    Number(cart.itemsPrice) +
+    Number(cart.shippingPrice) +
+    Number(cart.taxPrice)
+  ).toFixed(2)
+
+  const orderCreate = useSelector((state) => state.orderCreate)
+  const { order, success, error } = orderCreate
+  // undefined no order created
+  console.log(orderCreate.order)
+
+  useEffect(() => {
+    if (success) {
+      navigate(`/order/${order._id}`)
+    }
+    // eslint-disable-next-line
+  }, [navigate, success])
+// after click placeOrder button we would fire the create order which will take us to orderActions
+  const placeOrderHandler = () => {
+    dispatch(
+      // it's going to past it through the state and we need to grab it
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    )
+  }
 
   return (
     <>
@@ -95,30 +125,39 @@ const placeOrderHandler = () => {
               <ListGroupItem>
                 <h2>Order Summary</h2>
               </ListGroupItem>
+
               <ListGroupItem>
                 <Row>
                   <Col>Items</Col>
                   <Col>${cart.itemsPrice}</Col>
                 </Row>
               </ListGroupItem>
+
               <ListGroupItem>
                 <Row>
                   <Col>Shipping</Col>
                   <Col>${cart.shippingPrice}</Col>
                 </Row>
               </ListGroupItem>
+
               <ListGroupItem>
                 <Row>
                   <Col>Tax</Col>
                   <Col>${cart.taxPrice}</Col>
                 </Row>
               </ListGroupItem>
+
               <ListGroupItem>
                 <Row>
                   <Col>Total</Col>
                   <Col>${cart.totalPrice}</Col>
                 </Row>
               </ListGroupItem>
+
+              <ListGroupItem>
+                {error && <Message variant='danger'>{error}</Message>}
+              </ListGroupItem>
+
               <ListGroupItem className='d-grid gap-2'>
                 <Button
                   type='button'
