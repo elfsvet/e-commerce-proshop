@@ -18,11 +18,6 @@ const app = express()
 // middleware to accept json in the body request
 app.use(express.json())
 
-/*          CUSTOM MIDDLEWARE
- app.use((req, res, next) => {
-    console.log(req.originalUrl)
-    next();
-}) */
 
 app.get('/', (req, res) => {
   res.send('API is running....')

@@ -1,5 +1,4 @@
 // to not write the error logic with try/catch use this
-import { response } from 'express'
 import asyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
 
@@ -23,6 +22,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
   } else {
     const order = new Order({
       orderItems,
+      user: req.user._id,
       shippingAddress,
       paymentMethod,
       itemsPrice,
