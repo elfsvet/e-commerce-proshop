@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   Button,
@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { getOrderDetails } from '../actions/orderActions'
+import { set } from 'mongoose'
 
 const OrderScreen = () => {
-  // const [sdkReady, setSdkReady] = useState(false)
+  const [sdkReady, setSdkReady] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
@@ -35,25 +36,34 @@ const OrderScreen = () => {
   }
 
   if (!loading) {
-      // calculate prices
+    // calculate prices
     order.itemsPrice = addDecimals(
       order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
     )
   }
   useEffect(() => {
-
     const addPayPalScript = async () => {
-      const {data: clientId} = await axios.get('/api/config/paypal')
-      console.log(clientId)
+      const { data: clientId } = await axios.get('/api/config/paypal')
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+      script.async = true
+      script.onload = () => {
+        setSdkReady(true)
+      }
+      document.body.appendChild(script)
     }
 
-    addPayPalScript()
-
-
-    if(!order || order._id !== orderId) {
-        dispatch(getOrderDetails(orderId))
+    if (!order || order._id !== orderId || successPay) {
+      dispatch(getOrderDetails(orderId))
+    } else if (!order.isPaid) {
+      if (!window.paypal) {
+        addPayPalScript()
+      } else {
+        setSdkReady(true)
+      }
     }
-}, [dispatch, order, orderId]) 
+  }, [dispatch, order, orderId, successPay])
 
   return loading ? (
     <Loader />
