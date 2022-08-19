@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+// import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+import { PayPalButton } from 'react-paypal-button-v2'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   Button,
@@ -14,8 +15,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { getOrderDetails } from '../actions/orderActions'
-import { set } from 'mongoose'
+import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET } from '../constants/orderConstants'
 
 const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false)
@@ -55,6 +56,7 @@ const OrderScreen = () => {
     }
 
     if (!order || order._id !== orderId || successPay) {
+      dispatch({ type: ORDER_PAY_RESET })
       dispatch(getOrderDetails(orderId))
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -64,6 +66,11 @@ const OrderScreen = () => {
       }
     }
   }, [dispatch, order, orderId, successPay])
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult)
+    dispatch(payOrder(orderId, paymentResult))
+  }
 
   return loading ? (
     <Loader />
@@ -179,6 +186,20 @@ const OrderScreen = () => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroupItem>
+              {!order.isPaid && (
+                <ListGroupItem>
+                  {loadingPay && <Loader />}
+                  {!sdkReady ? (
+                    <Loader />
+                  ) : (
+                    <PayPalButton
+                    style={{color: 'black'}}
+                      amount={order.totalPrice}
+                      onSuccess={successPaymentHandler}
+                    />
+                  )}
+                </ListGroupItem>
+              )}
             </ListGroup>
           </Card>
         </Col>

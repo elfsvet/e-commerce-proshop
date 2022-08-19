@@ -121,7 +121,7 @@ export const payOrder =
         paymentResult,
         config
       )
-      console.log(data)
+      console.log("data from request " + data)
       dispatch({
         type: ORDER_PAY_SUCCESS,
         // ... and passing it as payload
