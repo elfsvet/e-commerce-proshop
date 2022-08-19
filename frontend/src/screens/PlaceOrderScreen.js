@@ -17,10 +17,12 @@ import { createOrder } from '../actions/orderActions'
 const PlaceOrderScreen = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const cart = useSelector((state) => state.cart)
+  // to the end of prices
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2)
   }
-  const cart = useSelector((state) => state.cart)
+
 
   //   calculate prices
   cart.itemsPrice = addDecimals(
@@ -46,7 +48,7 @@ const PlaceOrderScreen = () => {
     }
     // eslint-disable-next-line
   }, [navigate, success])
-// after click placeOrder button we would fire the create order which will take us to orderActions
+  // after click placeOrder button we would fire the create order which will take us to orderActions
   const placeOrderHandler = () => {
     dispatch(
       // it's going to past it through the state and we need to grab it

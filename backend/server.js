@@ -15,6 +15,7 @@ dotenv.config()
 connectDB()
 
 const app = express()
+
 // middleware to accept json in the body request
 app.use(express.json())
 
@@ -26,6 +27,11 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/orders', orderRoutes)
+
+// when we ready to make our payment we will hit this route and fetch this client id
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+)
 
 app.use(notFound)
 app.use(errorHandler)
