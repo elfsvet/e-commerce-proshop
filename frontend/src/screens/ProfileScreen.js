@@ -124,14 +124,16 @@ const ProfileScreen = () => {
         ) : errorOrders ? (
           <Message variant='danger'>{errorOrders}</Message>
         ) : (
-          <Table striped bordered haver responsive className='table-sm'>
+          <Table striped bordered hover responsive className='table-sm'>
             <thead>
-              <th>ID</th>
-              <th>DATE</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
-              <th></th>
+              <tr>
+                <th>ID</th>
+                <th>DATE</th>
+                <th>TOTAL</th>
+                <th>PAID</th>
+                <th>DELIVERED</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
@@ -155,7 +157,9 @@ const ProfileScreen = () => {
                   </td>
                   <td>
                     <LinkContainer to={`/orders/${order._id}`}>
-                      <Button className='btn-sm' variant='light'>Details</Button>
+                      <Button className='btn-sm' variant='light'>
+                        Details
+                      </Button>
                     </LinkContainer>
                   </td>
                 </tr>
