@@ -8,7 +8,9 @@ import {
   ORDER_PAY_FAIL,
   ORDER_PAY_SUCCESS,
   ORDER_PAY_REQUEST,
-  ORDER_PAY_RESET,
+  ORDER_LIST_MY_REQUEST,
+  ORDER_LIST_MY_SUCCESS,
+  ORDER_LIST_MY_FAIL,
 } from '../constants/orderConstants'
 import axios from 'axios'
 // it will get the data we passed with button click
@@ -121,7 +123,6 @@ export const payOrder =
         paymentResult,
         config
       )
-      console.log("data from request " + data)
       dispatch({
         type: ORDER_PAY_SUCCESS,
         // ... and passing it as payload
@@ -137,3 +138,43 @@ export const payOrder =
       })
     }
   }
+
+export const listMyOrders = () => async (dispatch, getState) => {
+  try {
+    // it will dispatch create request and set loading to true
+    dispatch({
+      type: ORDER_LIST_MY_REQUEST,
+    })
+    // we should pass our token and a header
+    // defines userinfo value deconstructing it from the state
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    // when we actually send data we want to send in the headers the content type of application / json.
+    // TOKEN
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    // getting the user data as id name email token....
+    const { data } = await axios.get(`/api/orders/myorders`, config)
+
+    console.log('data from request ' + data)
+    dispatch({
+      type: ORDER_LIST_MY_SUCCESS,
+      // ... and passing it as payload
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: ORDER_LIST_MY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 // import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import { PayPalButton } from 'react-paypal-button-v2'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
-  Button,
   Row,
   Col,
   ListGroup,
@@ -20,7 +19,6 @@ import { ORDER_PAY_RESET } from '../constants/orderConstants'
 
 const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false)
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
   const orderId = params.id
@@ -193,7 +191,7 @@ const OrderScreen = () => {
                     <Loader />
                   ) : (
                     <PayPalButton
-                    style={{color: 'black'}}
+                      style={{ color: 'black' }}
                       amount={order.totalPrice}
                       onSuccess={successPaymentHandler}
                     />
