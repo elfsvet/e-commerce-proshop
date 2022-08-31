@@ -8,6 +8,8 @@ import {
   updateUserProfile,
   getUsers,
   deleteUser,
+  getUserById,
+  updateUser,
 } from '../controllers/userController.js';
 // we cleaned up it to controllers productController.js
 
@@ -18,5 +20,9 @@ router
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);
 
-router.route('/:id').delete(protect, admin, deleteUser);
+router
+  .route('/:id')
+  .delete(protect, admin, deleteUser)
+  .get(protect, admin, getUserById)
+  .put(protect, admin, updateUser);
 export default router;
