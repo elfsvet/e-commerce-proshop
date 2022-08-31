@@ -10,6 +10,8 @@ import ShippingScreen from './screens/ShippingScreen'
 import PaymentScreen from './screens/PaymentScreen'
 import PlaceOrderScreen from './screens/PlaceOrderScreen'
 import OrderScreen from './screens/OrderScreen'
+import UserListScreen from './screens/UserListScreen'
+
 import { Container } from 'react-bootstrap'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
@@ -28,25 +30,12 @@ const App = () => {
             <Route path='/register' element={<RegisterScreen />} />
             <Route path='/profile' element={<ProfileScreen />} />
             <Route path='/product/:id' element={<ProductScreen />} />
-            {/* we will make id optional by putting ? after id and it doesn't work in react v6 so we will use longer solution */}
-            {/*
-              
-              Route path /cart/:id? become in v6 two options: 
-              
-              <Route path="/cart/:id" element={<CartPage />} />
-              <Route path="/cart/" element={<CartPage />} />
-              or
-              <Route path="/cart">
-              <Route index element={<CartPage />} />
-              <Route path=":id" element={<CartPage />} />
-              </Route>
-              
-            */}
-
             <Route path='/cart'>
               <Route path=':id' element={<CartScreen />} />
               <Route path='' element={<CartScreen />} />
             </Route>
+            <Route path='/admin/userlist' element={<UserListScreen />} />
+
             <Route path='/' element={<HomeScreen />} />
           </Routes>
         </Container>
