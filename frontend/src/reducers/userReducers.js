@@ -18,6 +18,9 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
 } from '../constants/userConstants';
 
 export const userLoginReducer = (state = {}, action) => {
@@ -106,6 +109,23 @@ export const userListReducer = (state = { users: [] }, action) => {
       return { loading: false, error: action.payload };
     case USER_LIST_RESET:
       return { users: [] };
+    default:
+      return state;
+  }
+};
+
+export const userDeleteReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case USER_DELETE_REQUEST:
+      // on request start loading while no data is retrieved.
+      return { loading: true };
+    // on success stop the loading and send the data from action.
+    case USER_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    // on error stop loading and send the error from action
+    case USER_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+
     default:
       return state;
   }
