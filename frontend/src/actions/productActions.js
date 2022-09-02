@@ -1,10 +1,14 @@
+// THIRD STEP
 import {
     PRODUCT_LIST_REQUEST,
     PRODUCT_LIST_SUCCESS,
     PRODUCT_LIST_FAIL,
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_SUCCESS,
-    PRODUCT_DETAILS_FAIL
+    PRODUCT_DETAILS_FAIL,
+    PRODUCT_DELETE_REQUEST,
+    PRODUCT_DELETE_SUCCESS,
+    PRODUCT_DELETE_FAIL,
 } from '../constants/productConstants'
 import axios from 'axios'
 // list products action
@@ -49,3 +53,42 @@ export const listProductDetails = (id) => async (dispatch) => {
         })
     }
 }
+
+
+export const deleteProduct = (id) => async (dispatch, getState) => {
+    try {
+      // it will dispatch create request and set loading to true
+      dispatch({
+        type: PRODUCT_DELETE_REQUEST,
+      })
+      // we should pass our token and a header
+      // defines userinfo value deconstructing it from the state
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      // when we actually send data we want to send in the headers the content type of application / json.
+      // TOKEN
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+  
+      // getting the user data as id name email token....
+      await axios.delete(`/api/products/${id}`, config)
+  
+      dispatch({
+        type: PRODUCT_DELETE_SUCCESS,
+      })
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_DELETE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
+  
