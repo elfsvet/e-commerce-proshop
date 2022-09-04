@@ -1,10 +1,11 @@
 import React from 'react';
+import SearchBox from './SearchBox';
 //! if you want to use action useDispatch if  you want to bring something from in from the state useSelector
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { logout } from '../actions/userActions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Route } from 'react-router-dom';
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
+            <SearchBox />
             <Nav className='ms-auto'>
               <LinkContainer to='/cart'>
                 <Nav.Link>

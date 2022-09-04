@@ -1,5 +1,6 @@
 import Header from './components/Header';
 import Footer from './components/Footer';
+
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
@@ -46,7 +47,8 @@ const App = () => {
               element={<ProductEditScreen />}
             />
             <Route path='admin/orderlist' element={<OrderListScreen />} />
-
+{/* in case change homescreen to searchbox */}
+            <Route path='/search/:keyword' element={<HomeScreen />} />
             <Route path='/' element={<HomeScreen />} />
           </Routes>
         </Container>

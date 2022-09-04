@@ -6,8 +6,17 @@ import asyncHandler from 'express-async-handler';
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  // if we want to create a harcoded error we can do it here with line below
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i',
+        },
+      }
+    : {};
+
+  const products = await Product.find({ ...keyword });
+  // if we want to create a hardcoded error we can do it here with line below
   // throw new Error('Some error')
   res.json(products);
 });
