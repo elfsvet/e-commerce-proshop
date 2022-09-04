@@ -1,5 +1,6 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
@@ -20,10 +21,10 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   //! using hooks:
   // to get location in url
-  const location = useLocation();
   //   to redirect us
   const navigate = useNavigate();
   //   to get action from actions and perform it
@@ -39,18 +40,7 @@ const ProductEditScreen = () => {
     success: successUpdate,
   } = productUpdate;
 
-  //   const productUpdate = useSelector((state) => state.productUpdate);
-  //   const {
-  //     loading: loadingUpdate,
-  //     error: errorUpdate,
-  //     success: successUpdate,
-  //   } = productUpdate;
-
   useEffect(() => {
-    // if (successUpdate) {
-    //   dispatch({ type: PRODUCT_UPDATE_RESET });
-    //   navigate('/admin/productlist');
-    // } else {
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate('/admin/productlist');
@@ -69,18 +59,52 @@ const ProductEditScreen = () => {
     }
   }, [dispatch, productId, product, navigate, successUpdate]);
 
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    console.log(file)
+    const formData = new FormData();
+    console.log(formData)
+    formData.append('image', file);
+    console.log(formData)
+
+    setUploading(true);
+
+    try {
+      console.log(1)
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+      console.log(2)
+      const { data } = await axios.post('/api/upload', formData, config);
+      console.log(3)
+      console.log(data)
+      setImage(data);
+      console.log(4)
+      setUploading(false);
+    } catch (error) {
+      console.log('nothing')
+      console.error(error);
+      setUploading(false);
+    }
+  };
+
+
   const submitHandler = (e) => {
     e.preventDefault();
-dispatch(updateProduct({
-  _id: productId,
-  name,
-  price,
-  image,
-  brand,
-  category,
-  description,
-  countInStock,
-}))
+    dispatch(
+      updateProduct({
+        _id: productId,
+        name,
+        price,
+        image,
+        brand,
+        category,
+        description,
+        countInStock,
+      })
+    );
   };
 
   return (
@@ -126,6 +150,14 @@ dispatch(updateProduct({
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
+              <Form.Control
+                type='file'
+                // id='image-file'
+                label='Choose File'
+                // custom='true'
+                onChange={uploadFileHandler}
+              ></Form.Control>
+              {uploading && <Loader />}
             </Form.Group>
 
             <Form.Group controlId='brand'>
