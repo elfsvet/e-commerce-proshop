@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import { PayPalButton } from 'react-paypal-button-v2';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import {
@@ -26,7 +25,7 @@ import {
 } from '../constants/orderConstants';
 
 const OrderScreen = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
   const dispatch = useDispatch();
   const params = useParams();
@@ -56,8 +55,8 @@ const OrderScreen = () => {
     );
   }
   useEffect(() => {
-    if(!userInfo) {
-      navigate('/login')
+    if (!userInfo) {
+      navigate('/login');
     }
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal');
@@ -71,7 +70,7 @@ const OrderScreen = () => {
       document.body.appendChild(script);
     };
 
-    if (!order || order._id !== orderId || successPay || successDeliver) {
+    if (!order || successPay || successDeliver || order._id !== orderId) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
@@ -82,10 +81,18 @@ const OrderScreen = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay, successDeliver]);
+  }, [
+    dispatch,
+    orderId,
+    successPay,
+    successDeliver,
+    order,
+    navigate,
+    userInfo,
+  ]);
 
   const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
+    // console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
   };
 
@@ -222,18 +229,21 @@ const OrderScreen = () => {
                 </ListGroupItem>
               )}
               {loadingDeliver && <Loader />}
-              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
-                <ListGroupItem>
-                  <Button
-                    type='button'
-                    // btn-block doesn't work
-                    className='w-100'
-                    onClick={deliverHandler}
-                  >
-                    Mark As Delivered
-                  </Button>
-                </ListGroupItem>
-              )}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroupItem>
+                    <Button
+                      type='button'
+                      // btn-block doesn't work
+                      className='w-100'
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroupItem>
+                )}
             </ListGroup>
           </Card>
         </Col>

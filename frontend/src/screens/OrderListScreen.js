@@ -24,7 +24,7 @@ const OrderListScreen = () => {
     }
   }, [dispatch, navigate, userInfo]);
 
-  console.log(orders);
+  // console.log(orders);
 
   return (
     <>

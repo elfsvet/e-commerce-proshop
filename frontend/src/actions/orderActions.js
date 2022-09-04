@@ -41,10 +41,10 @@ export const createOrder = (order) => async (dispatch, getState) => {
       },
     };
 
-    console.log(order);
+    // console.log(order);
     // getting the user data as id name email token....
     const { data } = await axios.post(`/api/orders`, order, config);
-    console.log(data);
+    // console.log(data);
     dispatch({
       type: ORDER_CREATE_SUCCESS,
       // ... and passing it as payload
@@ -84,7 +84,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
 
     // getting the user data as id name email token....
     const { data } = await axios.get(`/api/orders/${id}`, config);
-    console.log(data);
+    // console.log(data);
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
       // ... and passing it as payload
@@ -211,7 +211,7 @@ export const listMyOrders = () => async (dispatch, getState) => {
     // getting the user data as id name email token....
     const { data } = await axios.get(`/api/orders/myorders`, config);
 
-    console.log('data from request ' + data);
+    // console.log('data from request ' + data);
     dispatch({
       type: ORDER_LIST_MY_SUCCESS,
       // ... and passing it as payload
@@ -251,7 +251,7 @@ export const listOrders = () => async (dispatch, getState) => {
     // getting the user data as id name email token....
     const { data } = await axios.get(`/api/orders`, config);
 
-    console.log('data from request ' + data);
+    // console.log('data from request ' + data);
     dispatch({
       type: ORDER_LIST_SUCCESS,
       // ... and passing it as payload
