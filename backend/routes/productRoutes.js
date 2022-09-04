@@ -7,12 +7,14 @@ import {
   getProductById,
   getProducts,
   updateProduct,
+  getTopProducts,
 } from '../controllers/productController.js';
 // we cleaned up it to controllers productController.js
 import { protect, admin } from '../middleware/authMiddleware.js';
 //we can do this router.get('/',getProducts) but I would love to try this:
 router.route('/').get(getProducts).post(protect, admin, createProduct);
-router.route('/:id/reviews').post(protect, createProductReview)
+router.route('/:id/reviews').post(protect, createProductReview);
+router.get('/top', getTopProducts);
 
 // we also try a different route router.get('/:id', getProductById)
 router
