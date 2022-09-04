@@ -1,18 +1,22 @@
-import React from 'react'
+import React from 'react';
 //! if you want to use action useDispatch if  you want to bring something from in from the state useSelector
-import { useDispatch, useSelector } from 'react-redux'
-import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
-import { logout } from '../actions/userActions'
+import { useDispatch, useSelector } from 'react-redux';
+import { Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { logout } from '../actions/userActions';
+import { useNavigate } from 'react-router-dom';
 const Header = () => {
-  const dispatch = useDispatch()
-  const userLogin = useSelector((state) => state.userLogin)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userLogin = useSelector((state) => state.userLogin);
 
-  const { userInfo } = userLogin
+  const { userInfo } = userLogin;
 
   const logoutHandler = () => {
-    dispatch(logout())
-  }
+    dispatch(logout());
+    // in case the user or admin logs out i want them to be redirected to the home page.
+    navigate('/');
+  };
 
   return (
     <header>
@@ -57,7 +61,6 @@ const Header = () => {
                   <LinkContainer to='/admin/orderlist'>
                     <NavDropdown.Item>Orders</NavDropdown.Item>
                   </LinkContainer>
-                
                 </NavDropdown>
               )}
             </Nav>
@@ -65,7 +68,7 @@ const Header = () => {
         </Container>
       </Navbar>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
