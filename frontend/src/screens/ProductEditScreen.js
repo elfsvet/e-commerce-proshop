@@ -61,35 +61,25 @@ const ProductEditScreen = () => {
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
-    console.log(file)
     const formData = new FormData();
-    console.log(formData)
     formData.append('image', file);
-    console.log(formData)
 
     setUploading(true);
 
     try {
-      console.log(1)
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       };
-      console.log(2)
       const { data } = await axios.post('/api/upload', formData, config);
-      console.log(3)
-      console.log(data)
       setImage(data);
-      console.log(4)
       setUploading(false);
     } catch (error) {
-      console.log('nothing')
       console.error(error);
       setUploading(false);
     }
   };
-
 
   const submitHandler = (e) => {
     e.preventDefault();
