@@ -3,6 +3,7 @@ const router = express.Router();
 import {
   createProduct,
   deleteProduct,
+  createProductReview,
   getProductById,
   getProducts,
   updateProduct,
@@ -11,6 +12,7 @@ import {
 import { protect, admin } from '../middleware/authMiddleware.js';
 //we can do this router.get('/',getProducts) but I would love to try this:
 router.route('/').get(getProducts).post(protect, admin, createProduct);
+router.route('/:id/reviews').post(protect, createProductReview)
 
 // we also try a different route router.get('/:id', getProductById)
 router
