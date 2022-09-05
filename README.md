@@ -19,7 +19,7 @@
 
 ## General Info
 
-This my second e-commerce project. Here we used PayPal payment, MongoBD, and axios. It has logic for login/logout, user/admin, ability to add products with images, checkout and monitor your delivery progress. Thank you for shopping with us!
+This is my second e-commerce project. Here we used PayPal payment, MongoBD, and axios. It has logic for login/logout, user/admin, ability to add products with images, checkout and monitor your delivery progress. Thank you for shopping with us!
 
 ## Technologies
 
